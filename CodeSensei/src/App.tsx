@@ -114,8 +114,8 @@ function App() {
         className="main flex items-center justify-between"
         style={{ height: "calc(100vh - 90px)" }}
       >
-        <div className="left h-[80%] w-[50%]">
-          <div className="flex items-center gap-4 px-2 py-2 justify-between w-100%">
+        <div className="left h-[100%] w-[50%]">
+          <div className="flex items-center gap-4 px-2 w-[100%] h-[50px]">
             <div ref={selectWrapperRef} style={{ width: '82%' }}>
               <Select
                 defaultValue={selectedOption}
@@ -154,19 +154,21 @@ function App() {
                 borderRadius: 6,
                 border: 'none',
                 cursor: 'pointer',
-                width: '18%',
               }}
             >
               Review
             </button>
           </div>
           <Editor
-            height="100%"
+            height="calc(100% - 50px)"
             theme="vs-dark"
             language="javascript"
             value="// some comment"
           />
         
+        </div>
+        <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
+
         </div>
       </div>
     </div>
