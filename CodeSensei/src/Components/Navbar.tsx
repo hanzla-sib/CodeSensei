@@ -1,5 +1,4 @@
-import { View } from "lucide-react";
-import { Sun } from "lucide-react";
+import { View,Sun } from "lucide-react";
 
 const Navbar = () => {
   return (

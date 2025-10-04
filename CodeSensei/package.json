@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@tailwindcss/vite": "^4.1.14",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-select": "^5.10.2",
     "tailwindcss": "^4.1.14"
   },
   "devDependencies": {
