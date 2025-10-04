@@ -114,7 +114,7 @@ function App() {
         className="main flex items-center justify-between"
         style={{ height: "calc(100vh - 90px)" }}
       >
-        <div className="left h-[100%] w-[50%]">
+        <div className="left h-[100%] w-[50%] bg-zinc-900">
           <div className="flex items-center gap-4 px-2 w-[100%] h-[50px]">
             <div ref={selectWrapperRef} style={{ width: '82%' }}>
               <Select
@@ -168,7 +168,9 @@ function App() {
         
         </div>
         <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
-
+              <div className="toptab border-b-[1px] border-[#fff] flex items-center justify-between h-[60px]">
+                <p className="font-[700] text-[17px]">Response</p>
+              </div>
         </div>
       </div>
     </div>
