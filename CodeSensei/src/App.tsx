@@ -154,7 +154,6 @@ function App() {
                 borderRadius: 6,
                 border: 'none',
                 cursor: 'pointer',
-                width: '18%',
               }}
             >
               Review
