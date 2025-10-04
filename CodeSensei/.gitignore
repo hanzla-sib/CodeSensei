@@ -1,0 +1,85 @@
+## Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+## Vite / build
+dist/
+.turbo/
+.vercel/
+.cache/
+coverage/
+
+## TypeScript
+*.tsbuildinfo
+*.tscache
+
+## Environment
+.env
+.env.*
+
+## Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+## OS generated
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Logs
+*.log
+
+## OneDrive temporary files
+~$*
+~.*
+
+## Testing
+coverage/
+jest.config.*
+
+## Build outputs
+dist/
+build/
+out/
+
+## Lockfiles (if you prefer to ignore lockfiles, uncomment)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+## Misc
+*.tgz
+*.zip
+*.tar.gz
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
