@@ -144,6 +144,20 @@ function App() {
                 menuPlacement="auto"
               />
             </div>
+             <button
+              type="button"
+              onClick={() => console.log('Fix Code clicked', selectedOption)}
+              style={{
+                background: '#9333ea',
+                color: '#fff',
+                padding: '8px 70px',
+                borderRadius: 6,
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              Fix
+            </button>
             <button
               type="button"
               onClick={() => console.log('Review clicked', selectedOption)}
@@ -162,13 +176,13 @@ function App() {
           <Editor
             height="calc(100% - 50px)"
             theme="vs-dark"
-            language="javascript"
+            language={selectedOption ? selectedOption.value : 'javascript'}
             value="// some comment"
           />
         
         </div>
         <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
-              <div className="toptab border-b-[1px] border-[#fff] flex items-center justify-between h-[60px]">
+              <div className="toptab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justify-between h-[60px]">
                 <p className="font-[700] text-[17px]">Response</p>
               </div>
         </div>
