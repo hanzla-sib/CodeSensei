@@ -7,9 +7,41 @@ import { useState, useRef, useEffect } from "react";
 
 function App() {
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: 'javascript', label: 'JavaScript' },
+    { value: 'typescript', label: 'TypeScript' },
+    { value: 'python', label: 'Python' },
+    { value: 'java', label: 'Java' },
+    { value: 'csharp', label: 'C#' },
+    { value: 'cpp', label: 'C++' },
+    { value: 'c', label: 'C' },
+    { value: 'go', label: 'Go' },
+    { value: 'rust', label: 'Rust' },
+    { value: 'ruby', label: 'Ruby' },
+    { value: 'php', label: 'PHP' },
+    { value: 'swift', label: 'Swift' },
+    { value: 'kotlin', label: 'Kotlin' },
+    { value: 'scala', label: 'Scala' },
+    { value: 'dart', label: 'Dart' },
+    { value: 'elixir', label: 'Elixir' },
+    { value: 'haskell', label: 'Haskell' },
+    { value: 'clojure', label: 'Clojure' },
+    { value: 'erlang', label: 'Erlang' },
+    { value: 'perl', label: 'Perl' },
+    { value: 'r', label: 'R' },
+    { value: 'matlab', label: 'MATLAB' },
+    { value: 'sql', label: 'SQL' },
+    { value: 'shell', label: 'Shell (bash/zsh)' },
+    { value: 'powershell', label: 'PowerShell' },
+    { value: 'objective-c', label: 'Objective-C' },
+    { value: 'assembly', label: 'Assembly' },
+    { value: 'vbnet', label: 'VB.NET' },
+    { value: 'fortran', label: 'Fortran' },
+    { value: 'groovy', label: 'Groovy' },
+    { value: 'lua', label: 'Lua' },
+    { value: 'nim', label: 'Nim' },
+    { value: 'julia', label: 'Julia' },
+    { value: 'solidity', label: 'Solidity' },
+    { value: 'graphql', label: 'GraphQL' },
   ];
   const [selectedOption, setSelectedOption] = useState<{ value: string; label: string } | null>(options[0]);
 
@@ -82,34 +114,51 @@ function App() {
         className="main flex items-center justify-between"
         style={{ height: "calc(100vh - 90px)" }}
       >
-        <div className="left h-[80%] w-[50%] border-r border-gray-300">
-          <div ref={selectWrapperRef}>
-          <Select
-            defaultValue={selectedOption}
-            onChange={(option) => setSelectedOption(option as { value: string; label: string } | null)}
-            options={options}
-            // Merge base styles with dynamic menuPortal width to avoid duplicate props
-            styles={{
-              ...selectStyles,
-              menuPortal: (provided) => ({ ...provided, width: controlWidth ?? 'auto', zIndex: 9999 }),
-            }}
-            theme={(theme) => ({
-              ...theme,
-              borderRadius: 6,
-              colors: {
-                ...theme.colors,
-                primary25: 'rgba(147,51,234,0.12)',
-                primary: '#9333ea',
-                neutral0: '#0b0b0b',
-                neutral20: '#2d2d2d',
-                neutral30: '#2d2d2d',
-                neutral80: '#ffffff',
-              },
-            })}
-            menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
-            menuPosition="fixed"
-            menuPlacement="auto"
-          />
+        <div className="left h-[80%] w-[50%]">
+          <div className="flex items-center gap-4 px-2 py-2 justify-between w-100%">
+            <div ref={selectWrapperRef} style={{ width: '82%' }}>
+              <Select
+                defaultValue={selectedOption}
+                onChange={(option) => setSelectedOption(option as { value: string; label: string } | null)}
+                options={options}
+                // Merge base styles with dynamic menuPortal width to avoid duplicate props
+                styles={{
+                  ...selectStyles,
+                  menuPortal: (provided) => ({ ...provided, width: controlWidth ?? 'auto', zIndex: 9999 }),
+                }}
+                theme={(theme) => ({
+                  ...theme,
+                  borderRadius: 6,
+                  colors: {
+                    ...theme.colors,
+                    primary25: 'rgba(147,51,234,0.12)',
+                    primary: '#9333ea',
+                    neutral0: '#0b0b0b',
+                    neutral20: '#2d2d2d',
+                    neutral30: '#2d2d2d',
+                    neutral80: '#ffffff',
+                  },
+                })}
+                menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
+                menuPosition="fixed"
+                menuPlacement="auto"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => console.log('Review clicked', selectedOption)}
+              style={{
+                background: '#9333ea',
+                color: '#fff',
+                padding: '8px 70px',
+                borderRadius: 6,
+                border: 'none',
+                cursor: 'pointer',
+                width: '18%',
+              }}
+            >
+              Review
+            </button>
           </div>
           <Editor
             height="100%"
