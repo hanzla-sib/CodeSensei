@@ -200,53 +200,40 @@ function App() {
                 menuPlacement="auto"
               />
             </div>
-            <button
-              type="button"
-              onClick={() => console.log("Fix Code clicked", selectedOption)}
-              style={{
-                background: "#9333ea",
-                color: "#fff",
-                padding: "8px 70px",
-                borderRadius: 6,
-                border: "none",
-                cursor: loading ? "not-allowed" : "pointer",
-              }}
-              disabled={loading}
-            >
-              Fix
-            </button>
-            <button
-              type="button"
-              onClick={() => getResponse()}
-              style={{
-                background: "#9333ea",
-                color: "#fff",
-                padding: "8px 70px",
-                borderRadius: 6,
-                border: "none",
-                cursor: loading ? "not-allowed" : "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span className="loader" style={{ marginRight: 8 }} />
-                  Reviewing...
-                </>
-              ) : (
-                "Review"
-              )}
-            </button>
+            <div className="actions flex gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => console.log("Fix Code clicked", selectedOption)}
+                className="btn-secondary"
+                disabled={loading}
+              >
+                Fix
+              </button>
+              <button
+                type="button"
+                onClick={() => getResponse()}
+                className="btn-primary flex items-center"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="loader mr-2" />
+                    Reviewing...
+                  </>
+                ) : (
+                  "Review"
+                )}
+              </button>
+            </div>
           </div>
-          <Editor
-            height="calc(100% - 50px)"
-            theme="vs-dark"
-            language={selectedOption ? selectedOption.value : "javascript"}
-            value={code}
-            onChange={(value) => setCode(value || "")}
-          />
+
+            <Editor
+              height="calc(100% - 50px)"
+              theme="vs-dark"
+              language={selectedOption ? selectedOption.value : "javascript"}
+              value={code}
+              onChange={(value) => setCode(value || "")}
+            />
         </div>
         <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
           <div className="toptab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justify-between h-[60px]">

@@ -42,3 +42,58 @@ body {
     background: rgba(147,51,234,0.25);
     border-radius: 8px;
 }
+
+:root{
+    --bg: #070707;
+    --panel: #0b0b0b;
+    --accent: #9333ea;
+    --muted: #9ca3af;
+}
+
+/* App container tweaks */
+.app-root{
+    min-height:100vh;
+    background: linear-gradient(180deg, rgba(20,20,20,1) 0%, rgba(8,8,8,1) 100%);
+}
+
+/* Buttons */
+.btn-primary{
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-primary:disabled{ opacity: 0.6; cursor: not-allowed; }
+
+.btn-secondary{
+    background: transparent;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-secondary:hover{ border-color: var(--accent); color: var(--accent); }
+
+/* Controls area */
+.controls .react-select__control{ background: var(--panel) !important; }
+
+/* Editor should fill remaining space */
+.editor{ min-height: 300px; }
+
+/* Responsive adjustments */
+@media (max-width: 768px){
+    .nav{ padding: 0 16px !important; }
+    .nav .logo span{ font-size: 1.1rem !important; }
+    .controls{ padding: 10px !important; }
+    .editor{ min-height: 260px; }
+}
+
+@media (max-width: 480px){
+    .toptab p{ font-size: 0.95rem; }
+    .btn-primary, .btn-secondary{ padding: 8px 12px; font-size: 0.95rem; }
+}
