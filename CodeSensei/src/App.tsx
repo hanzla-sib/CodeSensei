@@ -4,7 +4,7 @@ import Navbar from "./Components/Navbar";
 import Select from "react-select";
 import type { StylesConfig } from "react-select";
 import { useState, useRef, useEffect } from "react";
-import { ReviewCode } from "./helper/AiHelper";
+import { ReviewCode, FixCode } from "./helper/AiHelper";
 import Markdown from "react-markdown";
 function App() {
   const options = [
@@ -47,6 +47,7 @@ function App() {
 
   const [code, setCode] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [fixLoading, setFixLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<{
     value: string;
     label: string;
@@ -126,7 +127,7 @@ function App() {
   }, []);
 
   const getResponse = async () => {
-    if (loading) return; // Prevent multiple clicks
+    if (loading || fixLoading) return; // Prevent multiple clicks
     setError(null);
     setResponse("");
     setLoading(true);
@@ -154,6 +155,51 @@ function App() {
       setLoading(false);
     }
   };
+
+  // Extract code from a fenced markdown code block. If none found, return full text.
+  const extractCodeFromMarkdown = (text: string) => {
+    if (!text) return "";
+    // Try to find ```lang\n...``` blocks
+    const fenceRe = /```(?:\w+)?\n([\s\S]*?)\n```/m;
+    const m = text.match(fenceRe);
+    if (m && m[1]) return m[1].trim();
+    return text.trim();
+  };
+
+  const handleFix = async () => {
+    if (loading || fixLoading) return;
+    setError(null);
+    setResponse("");
+    setFixLoading(true);
+    try {
+      const resp = await FixCode(
+        selectedOption ? selectedOption.value : "javascript",
+        code
+      );
+      const respText = resp?.toString() || "";
+      // Extract code block from response
+      const fixed = extractCodeFromMarkdown(respText);
+      // Update editor content
+      setCode(fixed);
+      // Also show the full response in the response panel for transparency
+      setResponse(respText);
+    } catch (err: unknown) {
+      console.error("FixCode error:", err);
+      let msg = "Unknown error";
+      if (typeof err === "string") msg = err;
+      else if (
+        err &&
+        typeof err === "object" &&
+        "message" in err &&
+        typeof (err as { message?: unknown }).message === "string"
+      ) {
+        msg = (err as { message?: unknown }).message as string;
+      }
+      setError(msg);
+    } finally {
+      setFixLoading(false);
+    }
+  };
   return (
     <div className="">
       <Navbar setNavBarcolor={setNavBarcolor} />
@@ -161,9 +207,9 @@ function App() {
         className="main flex items-center justify-between"
         style={{ height: "calc(100vh - 90px)" }}
       >
-        <div className="left h-[100%] w-[50%] bg-zinc-900">
-          <div className="flex items-center gap-4 px-2 w-[100%] h-[50px]">
-            <div ref={selectWrapperRef} style={{ width: "82%" }}>
+        <div className="left h-[100%] w-[50%] bg-zinc-900 flex flex-col">
+          <div className="flex items-center gap-4 px-2 w-[100%] controls-row py-2">
+            <div ref={selectWrapperRef} className="select-wrapper">
               <Select
                 defaultValue={selectedOption}
                 onChange={(option) =>
@@ -201,20 +247,27 @@ function App() {
                 menuPlacement="auto"
               />
             </div>
-            <div className="actions flex gap-2 sm:gap-3">
+            <div className="actions">
               <button
                 type="button"
-                onClick={() => console.log("Fix Code clicked", selectedOption)}
-                className="btn-secondary"
-                disabled={loading}
+                onClick={() => handleFix()}
+                className="btn-secondary flex items-center"
+                disabled={loading || fixLoading}
               >
-                Fix
+                {fixLoading ? (
+                  <>
+                    <span className="loader mr-2" />
+                    Fixing...
+                  </>
+                ) : (
+                  "Fix"
+                )}
               </button>
               <button
                 type="button"
                 onClick={() => getResponse()}
                 className="btn-primary flex items-center"
-                disabled={loading}
+                disabled={loading || fixLoading}
               >
                 {loading ? (
                   <>
@@ -228,13 +281,15 @@ function App() {
             </div>
           </div>
 
-          <Editor
-            height="calc(100% - 50px)"
-            theme={navBarcolor}
-            language={selectedOption ? selectedOption.value : "javascript"}
-            value={code}
-            onChange={(value) => setCode(value || "")}
-          />
+          <div className="flex-1">
+            <Editor
+              height="100%"
+              theme={navBarcolor}
+              language={selectedOption ? selectedOption.value : "javascript"}
+              value={code}
+              onChange={(value) => setCode(value || "")}
+            />
+          </div>
         </div>
         <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
           <div className="toptab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justify-between h-[60px]">
@@ -242,23 +297,20 @@ function App() {
           </div>
           <div className="response-container mt-[10px] h-[88%] p-4 bg-[#070707] rounded">
             {error ? (
-              <div style={{ color: "#ff6b6b" }}>Error: {error}</div>
+              <div className="response-center response-error">Error: {error}</div>
             ) : loading ? (
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div className="loader" />
-                <div>Waiting for response...</div>
+              <div className="response-center">
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div className="loader" />
+                  <div>Waiting for response...</div>
+                </div>
               </div>
             ) : response ? (
-              <div
-                className="response-scroll"
-                style={{ whiteSpace: "pre-wrap" }}
-              >
+              <div className="response-body response-scroll" style={{ whiteSpace: "pre-wrap" }}>
                 <Markdown>{response}</Markdown>
               </div>
             ) : (
-              <div style={{ color: "#9ca3af" }}>
-                No response yet. Click Review to start.
-              </div>
+              <div className="response-center">No response yet. Click Review to start.</div>
             )}
           </div>
         </div>

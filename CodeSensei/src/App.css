@@ -31,6 +31,28 @@ body {
     padding-right: 8px;
 }
 
+/* Response area layout */
+.response-container{
+    display: flex;
+    flex-direction: column;
+}
+.response-body{ /* fills available area */
+    flex: 1 1 auto;
+    display: block;
+}
+.response-center{
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    color: var(--muted);
+}
+.response-error{
+    color: #ff6b6b;
+}
+
 /* Custom thin scrollbar for modern browsers */
 .response-scroll::-webkit-scrollbar {
     width: 8px;
@@ -82,15 +104,15 @@ body {
 .response-container { background: var(--editor-bg); color: var(--text); }
 .toptab { border-color: var(--panel-border); }
 
-/* Buttons use accent and text */
+/* Buttons use accent and text (variable-driven so themes work) */
 .btn-primary{ background: var(--accent); color: #fff; }
-.btn-secondary{ color: var(--text); border-color: rgba(255,255,255,0.06); }
+.btn-secondary{ color: var(--text); border-color: var(--panel-border); }
 .btn-secondary:hover{ color: var(--accent); border-color: var(--accent); }
 
 /* Small utility to ensure icons use accent where intended */
 .icons .p-1 svg{ color: var(--text); }
 
-/* Buttons */
+/* Buttons (shared styling) */
 .btn-primary{
     background: var(--accent);
     color: #fff;
@@ -104,10 +126,10 @@ body {
 
 .btn-secondary{
     background: transparent;
-    color: #fff;
+    color: var(--text);
     padding: 8px 14px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid var(--panel-border);
     cursor: pointer;
     font-weight: 600;
 }
@@ -115,6 +137,40 @@ body {
 
 /* Controls area */
 .controls .react-select__control{ background: var(--panel) !important; }
+
+/* Responsive controls layout */
+.controls-row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+.select-wrapper{
+    width: 100%;
+    min-width: 0; /* allow flex children to shrink */
+}
+.actions{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Stack controls vertically on narrow screens */
+@media (max-width: 768px){
+    .controls-row{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .actions{
+        flex-direction: column;
+    }
+    .actions .btn-primary, .actions .btn-secondary{
+        width: 100%;
+        padding: 10px 12px;
+    }
+    .left{ padding-bottom: 0; }
+}
 
 /* Editor should fill remaining space */
 .editor{ min-height: 300px; }
