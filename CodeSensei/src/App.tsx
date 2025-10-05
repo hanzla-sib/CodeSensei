@@ -110,10 +110,11 @@ function App() {
   };
   const [response, setResponse] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+
   // Ref and measured width so the menu portal can match the control width and avoid clipping
   const selectWrapperRef = useRef<HTMLDivElement | null>(null);
   const [controlWidth, setControlWidth] = useState<number | null>(null);
-
+  const [navBarcolor, setNavBarcolor] = useState<string>("");
   useEffect(() => {
     const updateWidth = () => {
       const el = selectWrapperRef.current;
@@ -155,7 +156,7 @@ function App() {
   };
   return (
     <div className="">
-      <Navbar />
+      <Navbar setNavBarcolor={setNavBarcolor} />
       <div
         className="main flex items-center justify-between"
         style={{ height: "calc(100vh - 90px)" }}
@@ -227,13 +228,13 @@ function App() {
             </div>
           </div>
 
-            <Editor
-              height="calc(100% - 50px)"
-              theme="vs-dark"
-              language={selectedOption ? selectedOption.value : "javascript"}
-              value={code}
-              onChange={(value) => setCode(value || "")}
-            />
+          <Editor
+            height="calc(100% - 50px)"
+            theme={navBarcolor}
+            language={selectedOption ? selectedOption.value : "javascript"}
+            value={code}
+            onChange={(value) => setCode(value || "")}
+          />
         </div>
         <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
           <div className="toptab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justify-between h-[60px]">
@@ -254,7 +255,7 @@ function App() {
               >
                 <Markdown>{response}</Markdown>
               </div>
-            ) : ( 
+            ) : (
               <div style={{ color: "#9ca3af" }}>
                 No response yet. Click Review to start.
               </div>

@@ -2,8 +2,8 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #000;
-    color: #fff;
+    background-color: var(--bg-root);
+    color: var(--text);
 }
 
 /* Loader */
@@ -44,10 +44,27 @@ body {
 }
 
 :root{
+    /* color tokens for dark theme (default) */
+    --bg-root: #000000;
     --bg: #070707;
     --panel: #0b0b0b;
     --accent: #9333ea;
     --muted: #9ca3af;
+    --text: #ffffff;
+    --panel-border: #27272a;
+    --editor-bg: #0b0b0b;
+}
+
+/* Light theme overrides */
+.light {
+    --bg-root: #f6f7fb;
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --accent: #6b21a8; /* a slightly darker purple for contrast */
+    --muted: #6b7280;
+    --text: #0b0b0b;
+    --panel-border: #e6e6e6;
+    --editor-bg: #f7f7fb;
 }
 
 /* App container tweaks */
@@ -55,6 +72,23 @@ body {
     min-height:100vh;
     background: linear-gradient(180deg, rgba(20,20,20,1) 0%, rgba(8,8,8,1) 100%);
 }
+
+/* Make nav and panels use variables */
+.nav{ background: var(--bg); }
+.nav .logo span{ color: var(--text); }
+
+/* Panels */
+.left, .right { background: var(--panel); color: var(--text); }
+.response-container { background: var(--editor-bg); color: var(--text); }
+.toptab { border-color: var(--panel-border); }
+
+/* Buttons use accent and text */
+.btn-primary{ background: var(--accent); color: #fff; }
+.btn-secondary{ color: var(--text); border-color: rgba(255,255,255,0.06); }
+.btn-secondary:hover{ color: var(--accent); border-color: var(--accent); }
+
+/* Small utility to ensure icons use accent where intended */
+.icons .p-1 svg{ color: var(--text); }
 
 /* Buttons */
 .btn-primary{
