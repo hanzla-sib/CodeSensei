@@ -1,204 +1,38 @@
-import { Editor } from "@monaco-editor/react";
 import "./App.css";
 import Navbar from "./Components/Navbar";
-import Select from "react-select";
-import type { StylesConfig } from "react-select";
-import { useState, useRef, useEffect } from "react";
-import { ReviewCode, FixCode } from "./helper/AiHelper";
-import Markdown from "react-markdown";
+import LanguageSelector from "./Components/LanguageSelector";
+import ActionButtons from "./Components/ActionButtons";
+import CodeEditor from "./Components/CodeEditor";
+import ResponsePanel from "./Components/ResponsePanel";
+import { useState } from "react";
+import { useCodeReview, useCodeFix } from "./hooks/useCodeActions";
+import type { LanguageOption } from "./constants/languages";
+import { languageOptions } from "./constants/languages";
 function App() {
-  const options = [
-    { value: "javascript", label: "JavaScript" },
-    { value: "typescript", label: "TypeScript" },
-    { value: "python", label: "Python" },
-    { value: "java", label: "Java" },
-    { value: "csharp", label: "C#" },
-    { value: "cpp", label: "C++" },
-    { value: "c", label: "C" },
-    { value: "go", label: "Go" },
-    { value: "rust", label: "Rust" },
-    { value: "ruby", label: "Ruby" },
-    { value: "php", label: "PHP" },
-    { value: "swift", label: "Swift" },
-    { value: "kotlin", label: "Kotlin" },
-    { value: "scala", label: "Scala" },
-    { value: "dart", label: "Dart" },
-    { value: "elixir", label: "Elixir" },
-    { value: "haskell", label: "Haskell" },
-    { value: "clojure", label: "Clojure" },
-    { value: "erlang", label: "Erlang" },
-    { value: "perl", label: "Perl" },
-    { value: "r", label: "R" },
-    { value: "matlab", label: "MATLAB" },
-    { value: "sql", label: "SQL" },
-    { value: "shell", label: "Shell (bash/zsh)" },
-    { value: "powershell", label: "PowerShell" },
-    { value: "objective-c", label: "Objective-C" },
-    { value: "assembly", label: "Assembly" },
-    { value: "vbnet", label: "VB.NET" },
-    { value: "fortran", label: "Fortran" },
-    { value: "groovy", label: "Groovy" },
-    { value: "lua", label: "Lua" },
-    { value: "nim", label: "Nim" },
-    { value: "julia", label: "Julia" },
-    { value: "solidity", label: "Solidity" },
-    { value: "graphql", label: "GraphQL" },
-  ];
-
   const [code, setCode] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [fixLoading, setFixLoading] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<{
-    value: string;
-    label: string;
-  } | null>(options[0]);
-
-  // Custom styles for react-select to match app colors (dark bg and purple accent)
-  const selectStyles: StylesConfig<{ value: string; label: string }, false> = {
-    control: (
-      provided,
-      state: { isDisabled?: boolean; isFocused?: boolean; isSelected?: boolean }
-    ) => ({
-      ...provided,
-      background: "#0b0b0b",
-      borderColor: state.isFocused ? "#9333ea" : "#2d2d2d",
-      boxShadow: state.isFocused ? "0 0 0 1px rgba(147,51,234,0.25)" : "none",
-      "&:hover": {
-        borderColor: "#9333ea",
-      },
-    }),
-    menu: (provided) => ({
-      ...provided,
-      background: "#0b0b0b",
-      borderRadius: 6,
-      overflow: "hidden",
-    }),
-    option: (
-      provided,
-      state: { isDisabled?: boolean; isFocused?: boolean; isSelected?: boolean }
-    ) => ({
-      ...provided,
-      background: state.isFocused ? "rgba(147,51,234,0.12)" : "transparent",
-      color: "#ffffff",
-      cursor: "pointer",
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: "#ffffff",
-    }),
-    placeholder: (provided) => ({
-      ...provided,
-      color: "#9ca3af",
-    }),
-    input: (provided) => ({
-      ...provided,
-      color: "#ffffff",
-    }),
-    indicatorSeparator: (provided) => ({
-      ...provided,
-      backgroundColor: "#2d2d2d",
-    }),
-    dropdownIndicator: (
-      provided,
-      state: { isDisabled?: boolean; isFocused?: boolean; isSelected?: boolean }
-    ) => ({
-      ...provided,
-      color: state.isFocused ? "#9333ea" : "#9ca3af",
-      "&:hover": { color: "#9333ea" },
-    }),
-    // menuPortal styles will be set dynamically through measured width
-    menuPortal: (provided) => ({ ...provided, zIndex: 9999 }),
-  };
-  const [response, setResponse] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-
-  // Ref and measured width so the menu portal can match the control width and avoid clipping
-  const selectWrapperRef = useRef<HTMLDivElement | null>(null);
-  const [controlWidth, setControlWidth] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState<LanguageOption | null>(languageOptions[0]);
   const [navBarcolor, setNavBarcolor] = useState<string>("");
-  useEffect(() => {
-    const updateWidth = () => {
-      const el = selectWrapperRef.current;
-      if (el) setControlWidth(el.getBoundingClientRect().width);
-    };
-    updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
-  }, []);
 
-  const getResponse = async () => {
-    if (loading || fixLoading) return; // Prevent multiple clicks
-    setError(null);
-    setResponse("");
-    setLoading(true);
-    try {
-      const responseAi = await ReviewCode(
-        selectedOption ? selectedOption.value : "javascript",
-        code
-      );
-      setResponse(responseAi?.toString() || "No response");
-    } catch (err: unknown) {
-      console.error("ReviewCode error:", err);
-      let msg = "Unknown error";
-      if (typeof err === "string") msg = err;
-      else if (
-        err &&
-        typeof err === "object" &&
-        "message" in err &&
-        typeof (err as { message?: unknown }).message === "string"
-      ) {
-        msg = (err as { message?: unknown }).message as string;
-      }
-      setError(msg);
-      setResponse("");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Custom hooks for API calls
+  const { response, loading, error: reviewError, reviewCode } = useCodeReview();
+  const { fixLoading, error: fixError, fixCode } = useCodeFix();
 
-  // Extract code from a fenced markdown code block. If none found, return full text.
-  const extractCodeFromMarkdown = (text: string) => {
-    if (!text) return "";
-    // Try to find ```lang\n...``` blocks
-    const fenceRe = /```(?:\w+)?\n([\s\S]*?)\n```/m;
-    const m = text.match(fenceRe);
-    if (m && m[1]) return m[1].trim();
-    return text.trim();
+  // Combined error from both hooks
+  const error = reviewError || fixError;
+
+  const handleReview = async () => {
+    if (!selectedOption) return;
+    await reviewCode(selectedOption.value, code);
   };
 
   const handleFix = async () => {
-    if (loading || fixLoading) return;
-    setError(null);
-    setResponse("");
-    setFixLoading(true);
-    try {
-      const resp = await FixCode(
-        selectedOption ? selectedOption.value : "javascript",
-        code
-      );
-      const respText = resp?.toString() || "";
-      // Extract code block from response
-      const fixed = extractCodeFromMarkdown(respText);
-      // Update editor content
-      setCode(fixed);
-      // Also show the full response in the response panel for transparency
-      setResponse(respText);
-    } catch (err: unknown) {
-      console.error("FixCode error:", err);
-      let msg = "Unknown error";
-      if (typeof err === "string") msg = err;
-      else if (
-        err &&
-        typeof err === "object" &&
-        "message" in err &&
-        typeof (err as { message?: unknown }).message === "string"
-      ) {
-        msg = (err as { message?: unknown }).message as string;
-      }
-      setError(msg);
-    } finally {
-      setFixLoading(false);
-    }
+    if (!selectedOption) return;
+    await fixCode(
+      selectedOption.value,
+      code,
+      setCode,
+      () => {} // We don't need to update response for fix as it's handled in the hook
+    );
   };
   return (
     <div className="">
@@ -209,111 +43,31 @@ function App() {
       >
         <div className="left h-[100%] w-[50%] bg-zinc-900 flex flex-col">
           <div className="flex items-center gap-4 px-2 w-[100%] controls-row py-2">
-            <div ref={selectWrapperRef} className="select-wrapper">
-              <Select
-                defaultValue={selectedOption}
-                onChange={(option) =>
-                  setSelectedOption(
-                    option as { value: string; label: string } | null
-                  )
-                }
-                options={options}
-                // Merge base styles with dynamic menuPortal width to avoid duplicate props
-                styles={{
-                  ...selectStyles,
-                  menuPortal: (provided) => ({
-                    ...provided,
-                    width: controlWidth ?? "auto",
-                    zIndex: 9999,
-                  }),
-                }}
-                theme={(theme) => ({
-                  ...theme,
-                  borderRadius: 6,
-                  colors: {
-                    ...theme.colors,
-                    primary25: "rgba(147,51,234,0.12)",
-                    primary: "#9333ea",
-                    neutral0: "#0b0b0b",
-                    neutral20: "#2d2d2d",
-                    neutral30: "#2d2d2d",
-                    neutral80: "#ffffff",
-                  },
-                })}
-                menuPortalTarget={
-                  typeof document !== "undefined" ? document.body : null
-                }
-                menuPosition="fixed"
-                menuPlacement="auto"
-              />
-            </div>
-            <div className="actions">
-              <button
-                type="button"
-                onClick={() => handleFix()}
-                className="btn-secondary flex items-center"
-                disabled={loading || fixLoading}
-              >
-                {fixLoading ? (
-                  <>
-                    <span className="loader mr-2" />
-                    Fixing...
-                  </>
-                ) : (
-                  "Fix"
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => getResponse()}
-                className="btn-primary flex items-center"
-                disabled={loading || fixLoading}
-              >
-                {loading ? (
-                  <>
-                    <span className="loader mr-2" />
-                    Reviewing...
-                  </>
-                ) : (
-                  "Review"
-                )}
-              </button>
-            </div>
-          </div>
-
-          <div className="flex-1">
-            <Editor
-              height="100%"
-              theme={navBarcolor}
-              language={selectedOption ? selectedOption.value : "javascript"}
-              value={code}
-              onChange={(value) => setCode(value || "")}
+            <LanguageSelector
+              selectedLanguage={selectedOption}
+              onLanguageChange={setSelectedOption}
+            />
+            <ActionButtons
+              onFix={handleFix}
+              onReview={handleReview}
+              isLoading={loading}
+              isFixLoading={fixLoading}
             />
           </div>
+
+          <CodeEditor
+            value={code}
+            onChange={setCode}
+            language={selectedOption ? selectedOption.value : "javascript"}
+            theme={navBarcolor}
+          />
         </div>
-        <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
-          <div className="toptab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justify-between h-[60px]">
-            <p className="font-[700] text-[17px]">Response</p>
-          </div>
-          <div className="response-container mt-[10px] h-[88%] p-4 bg-[#070707] rounded">
-            {error ? (
-              <div className="response-center response-error">Error: {error}</div>
-            ) : loading ? (
-              <div className="response-center">
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div className="loader" />
-                  <div>Waiting for response...</div>
-                </div>
-              </div>
-            ) : response ? (
-              <div className="response-body response-scroll" style={{ whiteSpace: "pre-wrap" }}>
-                <Markdown>{response}</Markdown>
-              </div>
-            ) : (
-              <div className="response-center">No response yet. Click Review to start.</div>
-            )}
-          </div>
-        </div>
+        
+        <ResponsePanel
+          response={response}
+          error={error}
+          isLoading={loading}
+        />
       </div>
     </div>
   );
