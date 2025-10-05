@@ -10,6 +10,28 @@ CodeSensei is like having a personal coding mentor. You paste your code, select 
 - **Supports 30+ languages** - From JavaScript to Python, Java to Rust, and everything in between
 - **Works in dark/light mode** - Because we all have our preferences
 
+##  Screenshots of UI
+
+###  Dark Mode Interface
+*Clean, modern dark theme perfect for coding sessions*
+
+![CodeSensei Dark Mode](./screenshots/Screenshot1.png)
+
+###  Light Mode Interface  
+*Professional light theme for daytime development*
+
+![CodeSensei Light Mode](./screenshots/Screenshot2.png)
+
+###  AI Code Review - Dark Mode
+*AI-powered code analysis with detailed feedback and suggestions*
+
+![CodeSensei AI Review Dark](./screenshots/Screenshot3.png)
+
+###  AI Code Review - Light Mode
+*Same powerful AI features in light theme*
+
+![CodeSensei AI Review Light](./screenshots/Screenshot4.png)
+
 ## How It Works (The Simple Version)
 
 1. **You write code** - In the left panel (Monaco Editor, same one used in VS Code)
@@ -23,19 +45,55 @@ CodeSensei is like having a personal coding mentor. You paste your code, select 
 ```
 CodeSensei/
 ├── src/
-│   ├── App.tsx              # Main app - where the magic happens
+│   ├── App.tsx              # Main app - orchestrates all components
 │   ├── Components/
-│   │   └── Navbar.tsx       # Top navigation with theme toggle
+│   │   ├── Navbar.tsx       # Top navigation with theme toggle
+│   │   ├── LanguageSelector.tsx    # Dropdown for programming languages
+│   │   ├── ActionButtons.tsx       # Fix and Review buttons
+│   │   ├── CodeEditor.tsx          # Monaco code editor wrapper
+│   │   └── ResponsePanel.tsx       # AI response display area
+│   ├── hooks/
+│   │   └── useCodeActions.ts       # Custom hooks for API calls
+│   ├── constants/
+│   │   └── languages.ts            # Programming language options
 │   ├── helper/
-│   │   └── AiHelper.tsx     # Talks to Google's AI
+│   │   └── AiHelper.tsx            # Talks to Google's AI
 │   ├── enums/
-│   │   └── enum.ts          # Prompts we send to the AI
-│   └── assets/              # Images and icons
+│   │   └── enum.ts                 # Prompts we send to the AI
+│   └── assets/                     # Images and icons
 ├── package.json             # Lists all the tools we need
 ├── .env                     # Your secret API key (don't share this!)
 ├── .env-dummy              # Example of what .env should look like
 └── README.md               # This file you're reading
 ```
+
+## Architecture & Component Design
+
+The app follows modern React patterns with clean component separation:
+
+###  **Modular Components**
+- **App.tsx** - Main coordinator, handles state and component orchestration
+- **LanguageSelector** - Reusable dropdown with custom styling
+- **ActionButtons** - Handles Fix/Review actions with loading states
+- **CodeEditor** - Monaco editor wrapper with theme support
+- **ResponsePanel** - Smart display for AI responses, errors, and loading states
+
+###  **Custom Hooks**
+- **useCodeReview** - Manages code review API calls and state
+- **useCodeFix** - Handles code fixing logic and markdown parsing
+- Separates business logic from UI components
+
+###  **Clean File Organization**
+- `/Components` - Reusable UI components
+- `/hooks` - Custom React hooks for state management
+- `/constants` - Shared data (language options, etc.)
+- `/helper` - API integration utilities
+
+###  **Benefits of This Structure**
+- **Maintainable** - Each component has a single responsibility
+- **Reusable** - Components can be easily used elsewhere
+- **Testable** - Isolated logic makes testing easier
+- **Scalable** - Easy to add new features without breaking existing code
 
 ## Tech Stack (The Nerdy Stuff)
 
@@ -168,6 +226,38 @@ Feel free to:
 - Submit pull requests
 - Improve the documentation
 
+## Component Breakdown
+
+###  **LanguageSelector Component**
+- Handles 35+ programming language options
+- Custom-styled react-select with dark theme
+- Responsive dropdown with proper width management
+- Separated constants for easy maintenance
+
+###  **ActionButtons Component**
+- Manages Fix and Review button states
+- Handles loading indicators and disabled states
+- Reusable for any action-based functionality
+- Clean separation of UI and logic
+
+###  **CodeEditor Component**
+- Wraps Monaco Editor with consistent theming
+- Handles code changes and language switching
+- Theme synchronization with app-wide settings
+- Clean interface for editor functionality
+
+###  **ResponsePanel Component**
+- Smart rendering based on app state (loading, error, success)
+- Markdown support for formatted AI responses
+- Consistent error handling across all states
+- Responsive design for different screen sizes
+
+###  **Custom Hooks (useCodeActions)**
+- **useCodeReview**: Manages review API calls, loading states, and error handling
+- **useCodeFix**: Handles fix operations, markdown parsing, and code extraction
+- Separates API logic from UI components
+- Reusable across different components
+
 ## What Makes This Special
 
 Unlike other code review tools:
@@ -176,6 +266,7 @@ Unlike other code review tools:
 - **Works offline** (once loaded)
 - **Privacy-first** (your code isn't stored anywhere)
 - **Beginner-friendly** (explains everything simply)
+- **Well-architected** (clean, maintainable component structure)
 
 ## Need Help?
 
