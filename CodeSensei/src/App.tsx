@@ -5,7 +5,7 @@ import Select from "react-select";
 import type { StylesConfig } from "react-select";
 import { useState, useRef, useEffect } from "react";
 import { ReviewCode } from "./helper/AiHelper";
-
+import Markdown from "react-markdown";
 function App() {
   const options = [
     { value: "javascript", label: "JavaScript" },
@@ -261,11 +261,16 @@ function App() {
                 <div>Waiting for response...</div>
               </div>
             ) : response ? (
-              <div className="response-scroll" style={{ whiteSpace: "pre-wrap" }}>
-                {response}
+              <div
+                className="response-scroll"
+                style={{ whiteSpace: "pre-wrap" }}
+              >
+                <Markdown>{response}</Markdown>
               </div>
-            ) : (
-              <div style={{ color: "#9ca3af" }}>No response yet. Click Review to start.</div>
+            ) : ( 
+              <div style={{ color: "#9ca3af" }}>
+                No response yet. Click Review to start.
+              </div>
             )}
           </div>
         </div>
