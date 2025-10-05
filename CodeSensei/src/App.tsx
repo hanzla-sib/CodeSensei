@@ -46,6 +46,7 @@ function App() {
   ];
 
   const [code, setCode] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<{
     value: string;
     label: string;
@@ -107,7 +108,8 @@ function App() {
     // menuPortal styles will be set dynamically through measured width
     menuPortal: (provided) => ({ ...provided, zIndex: 9999 }),
   };
-
+  const [response, setResponse] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   // Ref and measured width so the menu portal can match the control width and avoid clipping
   const selectWrapperRef = useRef<HTMLDivElement | null>(null);
   const [controlWidth, setControlWidth] = useState<number | null>(null);
@@ -122,9 +124,35 @@ function App() {
     return () => window.removeEventListener("resize", updateWidth);
   }, []);
 
-  useEffect(() => {
-    ReviewCode(selectedOption ? selectedOption.value : "javascript", code);
-  }, []);
+  const getResponse = async () => {
+    if (loading) return; // Prevent multiple clicks
+    setError(null);
+    setResponse("");
+    setLoading(true);
+    try {
+      const responseAi = await ReviewCode(
+        selectedOption ? selectedOption.value : "javascript",
+        code
+      );
+      setResponse(responseAi?.toString() || "No response");
+    } catch (err: unknown) {
+      console.error("ReviewCode error:", err);
+      let msg = "Unknown error";
+      if (typeof err === "string") msg = err;
+      else if (
+        err &&
+        typeof err === "object" &&
+        "message" in err &&
+        typeof (err as { message?: unknown }).message === "string"
+      ) {
+        msg = (err as { message?: unknown }).message as string;
+      }
+      setError(msg);
+      setResponse("");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="">
       <Navbar />
@@ -181,24 +209,35 @@ function App() {
                 padding: "8px 70px",
                 borderRadius: 6,
                 border: "none",
-                cursor: "pointer",
+                cursor: loading ? "not-allowed" : "pointer",
               }}
+              disabled={loading}
             >
               Fix
             </button>
             <button
               type="button"
-              onClick={() => console.log("Review clicked", selectedOption)}
+              onClick={() => getResponse()}
               style={{
                 background: "#9333ea",
                 color: "#fff",
                 padding: "8px 70px",
                 borderRadius: 6,
                 border: "none",
-                cursor: "pointer",
+                cursor: loading ? "not-allowed" : "pointer",
+                display: "flex",
+                alignItems: "center",
               }}
+              disabled={loading}
             >
-              Review
+              {loading ? (
+                <>
+                  <span className="loader" style={{ marginRight: 8 }} />
+                  Reviewing...
+                </>
+              ) : (
+                "Review"
+              )}
             </button>
           </div>
           <Editor
@@ -211,7 +250,23 @@ function App() {
         </div>
         <div className="right !p-[10px] h-[100%] w-[50%] bg-zinc-900">
           <div className="toptab border-b-[1px] border-t-[1px] border-[#27272a] flex items-center justify-between h-[60px]">
-            <p className="font-[700] text-[17px]">Response {code}</p>
+            <p className="font-[700] text-[17px]">Response</p>
+          </div>
+          <div className="response-container mt-[10px] h-[88%] p-4 bg-[#070707] rounded">
+            {error ? (
+              <div style={{ color: "#ff6b6b" }}>Error: {error}</div>
+            ) : loading ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div className="loader" />
+                <div>Waiting for response...</div>
+              </div>
+            ) : response ? (
+              <div className="response-scroll" style={{ whiteSpace: "pre-wrap" }}>
+                {response}
+              </div>
+            ) : (
+              <div style={{ color: "#9ca3af" }}>No response yet. Click Review to start.</div>
+            )}
           </div>
         </div>
       </div>
