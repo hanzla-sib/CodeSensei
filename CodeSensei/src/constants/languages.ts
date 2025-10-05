@@ -1,0 +1,42 @@
+export interface LanguageOption {
+  value: string;
+  label: string;
+}
+
+export const languageOptions: LanguageOption[] = [
+  { value: "javascript", label: "JavaScript" },
+  { value: "typescript", label: "TypeScript" },
+  { value: "python", label: "Python" },
+  { value: "java", label: "Java" },
+  { value: "csharp", label: "C#" },
+  { value: "cpp", label: "C++" },
+  { value: "c", label: "C" },
+  { value: "go", label: "Go" },
+  { value: "rust", label: "Rust" },
+  { value: "ruby", label: "Ruby" },
+  { value: "php", label: "PHP" },
+  { value: "swift", label: "Swift" },
+  { value: "kotlin", label: "Kotlin" },
+  { value: "scala", label: "Scala" },
+  { value: "dart", label: "Dart" },
+  { value: "elixir", label: "Elixir" },
+  { value: "haskell", label: "Haskell" },
+  { value: "clojure", label: "Clojure" },
+  { value: "erlang", label: "Erlang" },
+  { value: "perl", label: "Perl" },
+  { value: "r", label: "R" },
+  { value: "matlab", label: "MATLAB" },
+  { value: "sql", label: "SQL" },
+  { value: "shell", label: "Shell (bash/zsh)" },
+  { value: "powershell", label: "PowerShell" },
+  { value: "objective-c", label: "Objective-C" },
+  { value: "assembly", label: "Assembly" },
+  { value: "vbnet", label: "VB.NET" },
+  { value: "fortran", label: "Fortran" },
+  { value: "groovy", label: "Groovy" },
+  { value: "lua", label: "Lua" },
+  { value: "nim", label: "Nim" },
+  { value: "julia", label: "Julia" },
+  { value: "solidity", label: "Solidity" },
+  { value: "graphql", label: "GraphQL" },
+];
