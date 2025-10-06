@@ -15,22 +15,22 @@ CodeSensei is like having a personal coding mentor. You paste your code, select 
 ###  Dark Mode Interface
 *Clean, modern dark theme perfect for coding sessions*
 
-![CodeSensei Dark Mode](./CodeSensei/screenshots/Screenshot1.png)
+![CodeSensei Dark Mode](./screenshots/Screenshot1.png)
 
 ###  Light Mode Interface  
 *Professional light theme for daytime development*
 
-![CodeSensei Light Mode](./CodeSensei/screenshots/Screenshot2.png)
+![CodeSensei Light Mode](./screenshots/Screenshot2.png)
 
 ###  AI Code Review - Dark Mode
 *AI-powered code analysis with detailed feedback and suggestions*
 
-![CodeSensei AI Review Dark](./CodeSensei/screenshots/Screenshot3.png)
+![CodeSensei AI Review Dark](./screenshots/Screenshot3.png)
 
 ###  AI Code Review - Light Mode
 *Same powerful AI features in light theme*
 
-![CodeSensei AI Review Light](./CodeSensei/screenshots/Screenshot4.png)
+![CodeSensei AI Review Light](./screenshots/Screenshot4.png)
 
 ## How It Works (The Simple Version)
 
